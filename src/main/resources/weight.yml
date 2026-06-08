@@ -1,0 +1,12 @@
+# =============================================
+#   HoloRace Weight Config - Dev For xVioCent_
+# =============================================
+# Tỉ lệ random từng race khi dùng item
+# Race không có trong file này = chỉ admin assign được
+# Tổng không cần = 100, plugin tự tính %
+
+weights:
+  human: 40    # Tộc Người - phổ biến nhất
+  fish: 30     # Tộc Cá
+  demon: 20    # Tộc Quỷ
+  giant: 10    # Tộc Khủng Lồ - hiếm nhất

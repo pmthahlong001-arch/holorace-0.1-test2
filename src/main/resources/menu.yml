@@ -1,0 +1,32 @@
+# =============================================
+#   HoloRace Menu Config - Dev For xVioCent_
+# =============================================
+
+menu:
+  title: "       ✦ Chọn Tộc ✦"
+  rows: 3
+
+  # Slot fill nền (0-26)
+  background:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,22,23,24,25,26]
+
+  # Race slots (giữa hàng 2: slot 10-16)
+  # Mỗi race sẽ tự động xếp vào đây theo thứ tự
+  race-slots: [10, 12, 14, 16]
+
+  # Item hiển thị từng race
+  # (name, lore lấy từ file race tương ứng)
+  race-item:
+    material: PLAYER_HEAD
+    selected-border: LIME_STAINED_GLASS_PANE
+    unselected-border: GRAY_STAINED_GLASS_PANE
+
+  # Nút đóng GUI
+  close-button:
+    slot: 22
+    material: BARRIER
+    name: "&cĐóng"
+    lore:
+      - "&7Click để đóng menu"

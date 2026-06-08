@@ -1,0 +1,58 @@
+# =============================================
+#   HoloRace Config - Dev For xVioCent_
+# =============================================
+
+# === AUTO RANDOM KHI VÀO SERVER ===
+# true = random race tự động khi player vào lần đầu
+auto-random-on-join: true
+
+# === COOLDOWN ITEM RANDOM RACE (giây) ===
+random-item-cooldown: 1800  # 30 phút = 1800 giây
+
+# === SỐ LƯỢT RANDOM MẶC ĐỊNH KHI TẠO PLAYER ===
+default-random-amount: 3
+
+# === ITEM RANDOM RACE ===
+random-item:
+  material: ENDER_EYE
+  name: "&bRandom &dRace"
+  # Gradient màu cho lore
+  lore:
+    - "&7Chuột phải để random tộc"
+    - "&7Cooldown: &e30 phút"
+    - ""
+    - "&8[ &b✦ &dHoloRace &b✦ &8]"
+  # Không thể vứt (trừ OP)
+  drop-prevention: true
+  # Enchant glow effect
+  glowing: true
+
+# === GUI CHỌN RACE ===
+gui:
+  title: "       ✦ Chọn Tộc ✦"
+  rows: 3
+  # Fill background
+  background-material: BLACK_STAINED_GLASS_PANE
+  background-name: " "
+
+# === HIỆU ỨNG SKILL ===
+skills:
+  # Tộc Người - Adrenaline
+  human:
+    adrenaline-hp-threshold: 50  # % máu kích hoạt
+    adrenaline-cooldown: 120     # giây
+
+  # Tộc Quỷ - Hút máu
+  demon:
+    lifesteal-chance: 30         # % crit kích hoạt hút máu
+    lifesteal-percent: 30        # % máu hút được
+
+  # Tộc Khủng Lồ
+  giant:
+    scale: 1.25                  # x1.25 = +25%
+
+# === MISC ===
+# Màu prefix trong message
+prefix: "&8[&bHolo&dRace&8]&r"
+# Debug mode (log ra console)
+debug: false
