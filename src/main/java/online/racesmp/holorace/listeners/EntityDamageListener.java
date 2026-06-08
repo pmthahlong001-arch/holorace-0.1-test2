@@ -13,6 +13,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class EntityDamageListener implements Listener {
@@ -53,7 +55,12 @@ public class EntityDamageListener implements Listener {
 
         for (Race.SkillConfig skill : race.getSkills()) {
             if (!skill.getType().equals("ADRENALINE")) continue;
-            plugin.getRaceManager().applyEffectList(player, skill.getEffectList());
+            
+            // ĐÃ SỬA: Ép kiểu trung gian an toàn từ List<Map<?, ?>> sang List<Map<String, ?>> tại dòng 56
+            @SuppressWarnings("unchecked")
+            List<Map<String, ?>> effectList = (List<Map<String, ?>>) (List<?>) skill.getEffectList();
+            
+            plugin.getRaceManager().applyEffectList(player, effectList);
             long cooldown = skill.getInt("cooldown", 120);
             cm.setCooldown(player.getUniqueId(), ADRENALINE_KEY, cooldown);
             player.sendMessage(MessageUtil.get(plugin, "skill-adrenaline"));
