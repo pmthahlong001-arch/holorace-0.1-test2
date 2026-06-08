@@ -59,13 +59,17 @@ public class RaceSkillListener implements Listener {
 
             if (!type.equals("PASSIVE")) continue;
 
+            // Ép kiểu trung gian an toàn từ List<Map<?, ?>> sang List<Map<String, ?>>
+            @SuppressWarnings("unchecked")
+            List<Map<String, ?>> effectList = (List<Map<String, ?>>) (List<?>) skill.getEffectList();
+
             switch (trigger) {
                 case "IN_WATER" -> {
                     if (waterChanged) {
                         if (inWater) {
                             // Vào nước: remove ON_LAND, apply IN_WATER
                             removeEffectsForTrigger(player, race, "ON_LAND");
-                            plugin.getRaceManager().applyEffectList(player, skill.getEffectList());
+                            plugin.getRaceManager().applyEffectList(player, effectList);
                         } else {
                             // Ra khỏi nước: remove IN_WATER, apply ON_LAND
                             removeEffectsForTrigger(player, race, "IN_WATER");
@@ -75,13 +79,13 @@ public class RaceSkillListener implements Listener {
                 }
                 case "ON_LAND" -> {
                     if (waterChanged && !inWater) {
-                        plugin.getRaceManager().applyEffectList(player, skill.getEffectList());
+                        plugin.getRaceManager().applyEffectList(player, effectList);
                     }
                 }
                 case "NIGHT" -> {
                     if (nightChanged) {
                         if (isNight) {
-                            plugin.getRaceManager().applyEffectList(player, skill.getEffectList());
+                            plugin.getRaceManager().applyEffectList(player, effectList);
                         } else {
                             // Ban ngày: remove night effects
                             removeEffectsForTrigger(player, race, "NIGHT");
@@ -95,7 +99,13 @@ public class RaceSkillListener implements Listener {
     private void removeEffectsForTrigger(Player player, Race race, String trigger) {
         for (Race.SkillConfig skill : race.getSkills()) {
             if (!skill.getType().equals("PASSIVE") || !skill.getTrigger().equals(trigger)) continue;
-            for (var eff : skill.getEffectList()) {
+            
+            // Ép kiểu an toàn tương tự để duyệt qua map
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> effectList = (List<Map<String, Object>>) (List<?>) skill.getEffectList();
+            
+            for (Map<String, Object> eff : effectList) {
+                // Sử dụng Map<String, Object> giúp hàm getOrDefault hoạt động trơn tru mà không lỗi Capture
                 String effectName = eff.getOrDefault("effect", "").toString();
                 PotionEffectType type = PotionEffectType.getByName(effectName);
                 if (type != null) player.removePotionEffect(type);
@@ -106,7 +116,10 @@ public class RaceSkillListener implements Listener {
     private void applyTrigger(Player player, Race race, String trigger) {
         for (Race.SkillConfig skill : race.getSkills()) {
             if (!skill.getType().equals("PASSIVE") || !skill.getTrigger().equals(trigger)) continue;
-            plugin.getRaceManager().applyEffectList(player, skill.getEffectList());
+            
+            @SuppressWarnings("unchecked")
+            List<Map<String, ?>> effectList = (List<Map<String, ?>>) (List<?>) skill.getEffectList();
+            plugin.getRaceManager().applyEffectList(player, effectList);
         }
     }
 
