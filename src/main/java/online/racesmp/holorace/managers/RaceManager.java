@@ -5,6 +5,7 @@ import online.racesmp.holorace.models.PlayerData;
 import online.racesmp.holorace.models.Race;
 import online.racesmp.holorace.utils.MessageUtil;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.ConfigurationSection; // FIX LỖI 1: Thêm import này vào
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -126,11 +127,12 @@ public class RaceManager {
         }
     }
 
-    public void applyEffectList(Player player, List<java.util.Map<?, ?>> effects) {
-        for (java.util.Map<?, ?> eff : effects) {
-            String effectName = eff.getOrDefault("effect", "").toString();
-            int amplifier = Integer.parseInt(eff.getOrDefault("amplifier", "0").toString());
-            int duration = Integer.parseInt(eff.getOrDefault("duration", "-1").toString());
+    // FIX LỖI 2: Đổi từ Map<?, ?> thành Map<String, ?> hoặc Map<Object, Object> để tránh lỗi capture wildcard
+    public void applyEffectList(Player player, List<java.util.Map<String, ?>> effects) {
+        for (java.util.Map<String, ?> eff : effects) {
+            String effectName = eff.containsKey("effect") ? eff.get("effect").toString() : "";
+            int amplifier = eff.containsKey("amplifier") ? Integer.parseInt(eff.get("amplifier").toString()) : 0;
+            int duration = eff.containsKey("duration") ? Integer.parseInt(eff.get("duration").toString()) : -1;
 
             PotionEffectType type = PotionEffectType.getByName(effectName);
             if (type == null) continue;
