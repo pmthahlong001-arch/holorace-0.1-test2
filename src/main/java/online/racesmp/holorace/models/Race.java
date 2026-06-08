@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Race {
 
@@ -29,7 +30,10 @@ public class Race {
         if (skillList != null) {
             for (Object obj : skillList) {
                 if (obj instanceof java.util.Map<?, ?> map) {
-                    skills.add(new SkillConfig(map));
+                    // Ép kiểu an toàn sang Map<String, Object> để xử lý nội bộ dễ dàng hơn
+                    @SuppressWarnings("unchecked")
+                    java.util.Map<String, Object> safeMap = (java.util.Map<String, Object>) (java.util.Map<?, ?>) map;
+                    skills.add(new SkillConfig(safeMap));
                 }
             }
         }
@@ -47,12 +51,17 @@ public class Race {
     public static class SkillConfig {
         private final String type;
         private final String trigger;
-        private final java.util.Map<?, ?> raw;
+        private final java.util.Map<String, Object> raw; // ĐỔI THÀNH: Map<String, Object> để tránh lỗi capture
 
-        public SkillConfig(java.util.Map<?, ?> map) {
+        public SkillConfig(java.util.Map<String, Object> map) {
             this.raw = map;
-            this.type = map.getOrDefault("type", "PASSIVE").toString().toUpperCase();
-            this.trigger = map.getOrDefault("trigger", "ALWAYS").toString().toUpperCase();
+            
+            // Ép kiểu Object về String, giải quyết triệt để lỗi dòng 54, 55 của bạn
+            Object typeVal = map.get("type");
+            this.type = (typeVal != null ? typeVal.toString() : "PASSIVE").toUpperCase();
+            
+            Object triggerVal = map.get("trigger");
+            this.trigger = (triggerVal != null ? triggerVal.toString() : "ALWAYS").toUpperCase();
         }
 
         public String getType() { return type; }
@@ -76,13 +85,17 @@ public class Race {
             return Boolean.parseBoolean(val.toString());
         }
 
+        // ĐỔI THÀNH: Trả về List<Map<String, ?>> để ăn khớp hoàn hảo với các Listener của bạn
         @SuppressWarnings("unchecked")
-        public List<java.util.Map<?, ?>> getEffectList() {
+        public List<java.util.Map<String, ?>> getEffectList() {
             Object val = raw.get("effects");
             if (val instanceof List<?> list) {
-                List<java.util.Map<?, ?>> result = new ArrayList<>();
+                List<java.util.Map<String, ?>> result = new ArrayList<>();
                 for (Object o : list) {
-                    if (o instanceof java.util.Map<?, ?> m) result.add(m);
+                    if (o instanceof java.util.Map<?, ?> m) {
+                        // Ép kiểu hai bước cưỡng chế cấu trúc map bên trong danh hiệu ứng
+                        result.add((java.util.Map<String, ?>) (java.util.Map<?, ?>) m);
+                    }
                 }
                 return result;
             }
